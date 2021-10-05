@@ -13,22 +13,23 @@
           @enderror
         </div>
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded font-medium">Publish</button>
+
       </form>
         @if ($posts->count())
           @foreach($posts as $post)
-            <div class="mb-4">
+            <div class="mb-4 border border-gray-500 p-2 rounded-lg shadow">
               <a href="" class="font-bold">{{ $post->user->name }}</a>
               <span class="text-gray-600 text-sm">{{ $post->created_at->diffForHumans() }}</span>
               <p class="mb-2">{{ $post->body }}</p>
-              @if ($post->ownedBy(auth()->user()))
-                <div>
+              
+                @can('delete', $post)
                   <form action="{{ route('posts.destroy', $post) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-red-500">Delete</button>
                   </form>
-                </div>
-              @endif
+                @endcan
+             
               <div class="flex items-center">
                 @auth
                   @if(!$post->likedBy(auth()->user()))
